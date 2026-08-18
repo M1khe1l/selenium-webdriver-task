@@ -8,17 +8,16 @@ import org.testng.asserts.SoftAssert;
 import pages.saucedemo_pages.InventoryItemPage;
 import pages.saucedemo_pages.InventoryPage;
 import pages.saucedemo_pages.LoginPage;
-import pages.saucedemo_pages.ShoppingCart;
 
 public class Scenario_3 extends BaseTest{
 
     private static final int ZERO = 0;
     private static final int ONE = 1;
     private static final int TWO = 2;
-    LoginPage loginPage;
-    InventoryPage inventoryPage;
-    ShoppingCart shoppingCart;
-    InventoryItemPage inventoryItemPage;
+
+    private LoginPage loginPage;
+    private InventoryPage inventoryPage;
+    private InventoryItemPage inventoryItemPage;
 
     @Test(priority = 1)
     public void loginWithInvalidCredentials() {

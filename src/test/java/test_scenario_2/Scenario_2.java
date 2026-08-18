@@ -9,11 +9,11 @@ import pages.saucedemo_pages.*;
 
 public class Scenario_2 extends BaseTest {
 
-    private static InventoryPage inventoryPage;
-    private static ShoppingCart shoppingCart;
-    private static CheckoutStep1 checkoutStep1;
-    private static CheckoutStep2 checkoutStep2;
-    private static CheckoutComplete checkoutComplete;
+    private InventoryPage inventoryPage;
+    private ShoppingCart shoppingCart;
+    private CheckoutStep1 checkoutStep1;
+    private CheckoutStep2 checkoutStep2;
+    private CheckoutComplete checkoutComplete;
 
     @Test
     public void verifyLogin(){

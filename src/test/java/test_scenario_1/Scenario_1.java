@@ -2,6 +2,7 @@ package test_scenario_1;
 
 import base.BaseTest;
 import base.TestData;
+import io.qameta.allure.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -11,12 +12,12 @@ import java.util.List;
 
 public class Scenario_1 extends BaseTest {
 
-    InventoryPage inventoryPage;
-    ShoppingCart shoppingCart;
-
     private static final int ZERO_PRODUCTS_COUNT = 0;
     private static final int TWO_PRODUCTS_COUNT = 2;
     private static final int THREE_PRODUCTS_COUNT = 3;
+
+    private InventoryPage inventoryPage;
+    private ShoppingCart shoppingCart;
 
     @Test
     public void verifyLogin() {
