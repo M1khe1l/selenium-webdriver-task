@@ -1,12 +1,16 @@
 package pages.saucedemo_pages;
 
+import core.driver.DriverFactory;
 import io.qameta.allure.Step;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pages.base.BasePage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 public class LoginPage extends BasePage {
+    private static final Logger logger = LoggerFactory.getLogger(LoginPage.class);
 
     @FindBy(xpath = "//div[@class='login_logo']")
     private WebElement loginPageHeader;
@@ -32,6 +36,7 @@ public class LoginPage extends BasePage {
 
     @Step("Login with username: {username}, and password: {password}")
     public InventoryPage login(String username, String password) {
+        logger.info("Login with username: {}, and password: {}", username, password);
         setUsername(username);
         setPassword(password);
         click(loginButton);
@@ -39,10 +44,12 @@ public class LoginPage extends BasePage {
     }
 
     public void setUsername(String username) {
+        logger.info("set username: {}", username);
         type(usernameField, username);
     }
 
     public void setPassword(String password) {
+        logger.info("set password: {}", password);
         type(passwordField, password);
     }
 

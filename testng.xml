@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 
-<suite name="saucedemo_test" verbose="3">
+<suite name="saucedemo_test" verbose="1">
 
-    <test name="all_test" parallel="classes" thread-count="10">
+    <test name="all_test" parallel="classes" thread-count="3">
         <classes>
             <class name="test_scenario_1.Scenario_1"/>
             <class name="test_scenario_2.Scenario_2"/>

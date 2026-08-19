@@ -1,20 +1,16 @@
 package base;
 
+import core.driver.DriverFactory;
 import io.qameta.allure.Attachment;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class BaseTest {
     protected static final Logger log = LoggerFactory.getLogger(BaseTest.class);
@@ -24,7 +20,7 @@ public class BaseTest {
 
     @BeforeClass
     public void setup() {
-        driver = createDriver();
+        driver = DriverFactory.getDriver();
         log.info("Navigating  to URL: {}", URL);
         driver.get(URL);
     }
@@ -39,35 +35,13 @@ public class BaseTest {
 
     @AfterClass
     public void tearDown() {
-        log.info("Tearing down Browser");
-        if (driver != null) {
-            driver.quit();
-        }
+        DriverFactory.quitDriver();
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     @Attachment(value = "Screenshot on failure", type = "image/png")
     public byte[] takeScreenshot() {
         log.info("Taking  screenshot");
-        return ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.BYTES);
-    }
-
-    protected WebDriver createDriver() {
-        if (driver != null) {
-            return driver;
-        }
-        ChromeOptions options = new ChromeOptions();
-        Map<String, Object> prefs = new HashMap<>();
-        prefs.put("credentials_enable_service", false);
-        prefs.put("profile.password_manager_enabled", false);
-        prefs.put("profile.password_manager_leak_detection", false);
-        options.setExperimentalOption("prefs", prefs);
-
-        WebDriver driver = new ChromeDriver(options);
-        driver.manage().window().maximize();
-        return driver;
-    }
-
-    protected WebDriver getDriver() {
-        return createDriver();
+        return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
     }
 }
