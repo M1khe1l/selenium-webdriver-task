@@ -1,5 +1,6 @@
 package pages.saucedemo_pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.support.ui.Select;
@@ -47,6 +48,7 @@ public class InventoryPage extends BasePage {
         super(driver);
     }
 
+    @Step("Edd products to cart: {productNames}")
     public InventoryPage addProductsToCart(String... productNames) {
         for (String productName : productNames) {
             click(stringToByAddition(productName));
@@ -54,6 +56,7 @@ public class InventoryPage extends BasePage {
         return this;
     }
 
+    @Step("Remove products from cart: {productNames}")
     public InventoryPage removeProductsFromCart(String... productNames) {
         for (String productName : productNames) {
             click(stringToByRemoval(productName));
@@ -108,12 +111,12 @@ public class InventoryPage extends BasePage {
         return new ShoppingCart(driver);
     }
 
-    public boolean isShoppingCartBadgeDisplayed() {
-        return isElementDisplayed(shoppingCartBadge);
+    public boolean isShoppingCartBadgeDisplayedNoWait() {
+        return isElementDisplayedNoWait(shoppingCartBadge);
     }
 
     public int getCartItemCount(){
-        if(isShoppingCartBadgeDisplayed()) {
+        if(isShoppingCartBadgeDisplayedNoWait()) {
             try {
                 return Integer.parseInt(shoppingCartBadge.getText());
             } catch (NoSuchElementException e) {

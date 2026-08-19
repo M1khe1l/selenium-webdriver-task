@@ -1,5 +1,6 @@
 package pages.saucedemo_pages;
 
+import io.qameta.allure.Step;
 import pages.base.BasePage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -29,6 +30,7 @@ public class LoginPage extends BasePage {
         super(driver);
     }
 
+    @Step("Login with username: {username}, and password: {password}")
     public InventoryPage login(String username, String password) {
         setUsername(username);
         setPassword(password);

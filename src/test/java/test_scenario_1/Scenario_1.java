@@ -9,7 +9,7 @@ import org.testng.asserts.SoftAssert;
 import pages.saucedemo_pages.*;
 
 import java.util.List;
-
+@Epic("Scenario 1")
 public class Scenario_1 extends BaseTest {
 
     private static final int ZERO_PRODUCTS_COUNT = 0;
@@ -20,6 +20,8 @@ public class Scenario_1 extends BaseTest {
     private ShoppingCart shoppingCart;
 
     @Test
+    @Story("login with valid credentials")
+    @Description("Verifies that an existing user can log in with correct password.")
     public void verifyLogin() {
         inventoryPage = new LoginPage(driver)
                 .login(TestData.STANDARD_USERNAME, TestData.PASSWORD);
@@ -27,6 +29,7 @@ public class Scenario_1 extends BaseTest {
     }
 
     @Test(dependsOnMethods = "verifyLogin")
+    @Step("adding two Items to cart")
     public void addTwoItemsToCart() {
         inventoryPage.addProductsToCart(TestData.BACKPACK, TestData.BIKE_LIGHT);
         Assert.assertEquals(inventoryPage.getCartItemCount(), TWO_PRODUCTS_COUNT, String.format("Incorrect number of items in cart, " +

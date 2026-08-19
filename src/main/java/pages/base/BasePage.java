@@ -49,6 +49,14 @@ public abstract class BasePage{
         }
     }
 
+    protected boolean isElementDisplayedNoWait(WebElement element) {
+        try {
+            return element.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     protected List<WebElement> getListOfElements(By locator) {
         return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
     }

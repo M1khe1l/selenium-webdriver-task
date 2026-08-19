@@ -2,6 +2,7 @@ package test_scenario_3;
 
 import base.BaseTest;
 import base.TestData;
+import io.qameta.allure.Epic;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -9,6 +10,7 @@ import pages.saucedemo_pages.InventoryItemPage;
 import pages.saucedemo_pages.InventoryPage;
 import pages.saucedemo_pages.LoginPage;
 
+@Epic("Scenario 3")
 public class Scenario_3 extends BaseTest{
 
     private static final int ZERO = 0;

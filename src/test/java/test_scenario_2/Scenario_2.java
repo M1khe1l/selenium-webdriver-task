@@ -2,11 +2,13 @@ package test_scenario_2;
 
 import base.BaseTest;
 import base.TestData;
+import io.qameta.allure.Epic;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import pages.saucedemo_pages.*;
 
+@Epic("Scenario 2")
 public class Scenario_2 extends BaseTest {
 
     private InventoryPage inventoryPage;

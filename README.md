@@ -24,4 +24,4 @@ This project is a Maven-based Selenium WebDriver automation task implemented in 
 
 The project contains automated tests covering three specified scenarios of the SauceDemo application.
 
-Tests can be executed using Maven or directly from IntelliJ IDEA.
+Tests can be executed using Maven or directly from IntelliJ IDEA.x
