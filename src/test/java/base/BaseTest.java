@@ -28,7 +28,7 @@ public class BaseTest {
 
     protected WebDriver driver;
 
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void setup() {
         driver = DriverFactory.getDriver();
         String baseURL = ConfigReader.getBaseUrl();
@@ -46,7 +46,7 @@ public class BaseTest {
         }
     }
 
-    @AfterClass
+    @AfterClass(alwaysRun = true)
     public void tearDown() {
         DriverFactory.quitDriver();
     }

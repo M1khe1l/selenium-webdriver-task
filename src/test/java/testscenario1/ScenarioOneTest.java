@@ -23,7 +23,7 @@ public class ScenarioOneTest extends BaseTest {
 
     private ShoppingSteps shoppingSteps;
 
-    @Test
+    @Test(groups = {"smoke", "regression"})
     @Story("login with valid credentials")
     @Description("Verifies that an existing user can log in with correct password.")
     public void verifyLogin() {
@@ -32,7 +32,7 @@ public class ScenarioOneTest extends BaseTest {
         Assert.assertTrue(inventoryPage.isHeaderDisplayed(), "Inventory page is not displayed");
     }
 
-    @Test(dependsOnMethods = "verifyLogin")
+    @Test(dependsOnMethods = "verifyLogin", groups = "regression")
     @Step("adding two Items to cart")
     public void addTwoItemsToCart() {
         shoppingSteps = new ShoppingSteps(inventoryPage);
@@ -41,26 +41,26 @@ public class ScenarioOneTest extends BaseTest {
                 "expected %d but got %d", TWO_PRODUCTS_COUNT, inventoryPage.getCartItemCount()));
     }
 
-    @Test(dependsOnMethods = "addTwoItemsToCart")
+    @Test(dependsOnMethods = "addTwoItemsToCart", groups = "regression")
     public void addThirdItemToCart() {
         shoppingSteps.addProducts(TestData.BOLT_T_SHIRT);
         Assert.assertEquals(inventoryPage.getCartItemCount(), THREE_PRODUCTS_COUNT, String.format("Incorrect number of items in Cart, " +
                 "expected %d but got %d ", THREE_PRODUCTS_COUNT, inventoryPage.getCartItemCount()));
     }
 
-    @Test(dependsOnMethods = "addThirdItemToCart")
+    @Test(dependsOnMethods = "addThirdItemToCart", groups = "regression")
     public void removeProductsFromCart() {
         shoppingSteps.removeProducts(TestData.BOLT_T_SHIRT, TestData.BIKE_LIGHT, TestData.BACKPACK);
         Assert.assertEquals(inventoryPage.getCartItemCount(), ZERO_PRODUCTS_COUNT, "shopping card badge should not be displayed");
     }
 
-    @Test(dependsOnMethods = "removeProductsFromCart")
-    public void goToCartWithTreeProducts() {
+    @Test(dependsOnMethods = "removeProductsFromCart", groups = "regression")
+    public void goToCartWithThreeProducts() {
         shoppingCart = shoppingSteps.addProductsAndGoToCart(TestData.FLEECE_JACKET, TestData.RED_T_SHIRT, TestData.ONESIE);
         Assert.assertTrue(shoppingCart.isShoppingCartTitleDisplayed(), "Shopping cart title is not displayed");
     }
 
-    @Test(dependsOnMethods = "goToCartWithTreeProducts")
+    @Test(dependsOnMethods = "goToCartWithThreeProducts", groups = "regression")
     public void verifyProductsInCart() {
         List<String> namesList =shoppingCart.getShoppingCartItemNames();
         String names = namesList.toString();
@@ -74,14 +74,14 @@ public class ScenarioOneTest extends BaseTest {
         softAssert.assertAll();
     }
 
-    @Test(dependsOnMethods = "verifyProductsInCart")
+    @Test(dependsOnMethods = "verifyProductsInCart", groups = "regression")
     public void continueShopping() {
         String inventoryTitle = shoppingCart.continueShopping()
                 .getInventoryTitle();
         Assert.assertEquals(inventoryTitle, TestData.INVENTORY_TITLE);
     }
 
-    @Test(dependsOnMethods = "continueShopping")
+    @Test(dependsOnMethods = "continueShopping", groups = "regression")
     public void verifyCartBadge(){
         Assert.assertEquals(inventoryPage.getCartItemCount(), THREE_PRODUCTS_COUNT,
                 String.format("Shopping cart container should contain %d products", THREE_PRODUCTS_COUNT));

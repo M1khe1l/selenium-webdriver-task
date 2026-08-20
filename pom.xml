@@ -15,6 +15,7 @@
         <allure.version>2.35.4</allure.version>
         <!--aspectj properties -->
         <aspectj.version>1.9.21</aspectj.version>
+        <suiteXmlFile>smoke.xml</suiteXmlFile>
     </properties>
 
     <dependencies>
@@ -90,7 +91,7 @@
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
                     <suiteXmlFiles>
-                        <suiteXmlFile>testng.xml</suiteXmlFile>
+                        <suiteXmlFile>src/test/resources/${suiteXmlFile}</suiteXmlFile>
                     </suiteXmlFiles>
                 </configuration>
             </plugin>

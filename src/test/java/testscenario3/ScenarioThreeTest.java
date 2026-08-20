@@ -4,6 +4,7 @@ import base.BaseTest;
 import base.TestData;
 import business.steps.LoginSteps;
 import io.qameta.allure.Epic;
+import io.qameta.allure.Story;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -24,7 +25,8 @@ public class ScenarioThreeTest extends BaseTest{
 
     private LoginSteps loginSteps;
 
-    @Test(priority = 1)
+    @Test(priority = 1, groups = {"smoke", "regression"})
+    @Story("login with invalid credentials")
     public void loginWithInvalidCredentials() {
         loginSteps = new LoginSteps(driver);
         loginPage = loginSteps.attemptLogin(TestData.RANDOM_SYMBOLS, TestData.PASSWORD);
@@ -37,7 +39,8 @@ public class ScenarioThreeTest extends BaseTest{
 
     }
 
-    @Test(priority = 2)
+    @Test(priority = 2, groups = "regression")
+    @Story("login with locked-out username")
     public void loginWithLockedOutUser() {
         loginPage = loginSteps.attemptLogin(TestData.LOCKED_OUT_USERNAME, TestData.PASSWORD);
 
@@ -48,7 +51,8 @@ public class ScenarioThreeTest extends BaseTest{
         softAssert.assertAll();
     }
 
-    @Test(priority = 3)
+    @Test(priority = 3, groups = "regression")
+    @Story("login with valid credentials")
     public void loginWithStandardUser() {
         inventoryPage = loginSteps.login(TestData.STANDARD_USERNAME, TestData.PASSWORD);
 
@@ -58,35 +62,40 @@ public class ScenarioThreeTest extends BaseTest{
                 "Inventory page title is incorrect");
     }
 
-    @Test(priority = 4)
+    @Test(priority = 4, groups = "regression")
+    @Story("Sorting products according price: Hi->Low")
     public void sortProductHiLow() {
         int index = inventoryPage.sortProductsByValue(TestData.SORT_HI_LOW)
                 .getIndexOfHighesPrice();
         Assert.assertEquals(index, ZERO, "Highest price item must be first");
     }
 
-    @Test(priority = 5)
+    @Test(priority = 5, groups = "regression")
+    @Story("Sorting products according price: Low->Hi")
     public void sortProductLowHi() {
         int index = inventoryPage.sortProductsByValue(TestData.SORT_LOW_HI)
                 .getIndexOfLowesPrice();
         Assert.assertEquals(index, ZERO, "Lowest price item must be first");
     }
 
-    @Test(priority = 6)
+    @Test(priority = 6, groups = "regression")
+    @Story("Opening item description page")
     public void showItem() {
         inventoryItemPage = inventoryPage.showItem(TestData.RED_T_SHIRT);
         Assert.assertEquals(inventoryItemPage.getItemDescription(), TestData.RED_T_SHIRT_DESCRIPTION,
                 "Item description is incorrect");
     }
 
-    @Test(dependsOnMethods = "showItem")
+    @Test(dependsOnMethods = "showItem", groups = "regression")
+    @Story("adding item from item description page to cart and going back to shop")
     public void addToCartAndContinueShopping() {
         inventoryPage = inventoryItemPage.addToCart()
                 .goBackToProducts();
         Assert.assertEquals(inventoryPage.getCartItemCount(), ONE, "CartItemCount is incorrect");
     }
 
-    @Test(dependsOnMethods = "addToCartAndContinueShopping")
+    @Test(dependsOnMethods = "addToCartAndContinueShopping", groups = "regression")
+    @Story("Adding new item and opening item description page")
     public void addToCartSecondItemAndCheckItemsAdded() {
         inventoryItemPage = inventoryPage.addProductsToCart(TestData.BACKPACK)
                 .showItem(TestData.BACKPACK);

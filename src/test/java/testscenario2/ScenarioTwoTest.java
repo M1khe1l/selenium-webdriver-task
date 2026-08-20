@@ -6,6 +6,7 @@ import business.steps.CheckoutSteps;
 import business.steps.LoginSteps;
 import business.steps.ShoppingSteps;
 import io.qameta.allure.Epic;
+import io.qameta.allure.Story;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -19,14 +20,16 @@ public class ScenarioTwoTest extends BaseTest {
 
     private final CheckoutSteps checkoutSteps =  new CheckoutSteps();
 
-    @Test
+    @Test(groups = {"smoke", "regression"})
+    @Story("login with valid credentials")
     public void verifyLogin(){
         LoginSteps loginSteps = new LoginSteps(driver);
         inventoryPage = loginSteps.login(TestData.STANDARD_USERNAME, TestData.PASSWORD);
         Assert.assertTrue(inventoryPage.isHeaderDisplayed(), "Inventory page is not displayed");
     }
 
-    @Test(dependsOnMethods = "verifyLogin")
+    @Test(dependsOnMethods = "verifyLogin", groups = "regression")
+    @Story("Adding 4 items to cart")
     public void verifyAddToCart(){
         ShoppingSteps shoppingSteps = new ShoppingSteps(inventoryPage);
         shoppingCart = shoppingSteps.addProductsAndGoToCart(TestData.BACKPACK,
@@ -34,7 +37,8 @@ public class ScenarioTwoTest extends BaseTest {
         Assert.assertEquals(shoppingCart.getShoppingCartItemCount(), 4, "Shopping cart item count is incorrect");
     }
 
-    @Test(dependsOnMethods = "verifyAddToCart")
+    @Test(dependsOnMethods = "verifyAddToCart", groups = "regression")
+    @Story("Implementing complete checkout")
     public void verifyCheckoutComplete(){
         CheckoutComplete checkoutComplete = checkoutSteps.completeCheckout(shoppingCart, TestData.RANDOM_SYMBOLS, TestData.RANDOM_SYMBOLS, TestData.RANDOM_SYMBOLS);
 
