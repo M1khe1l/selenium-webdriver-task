@@ -1,4 +1,4 @@
-package pages.saucedemo_pages;
+package pages.saucedemopages;
 
 import org.openqa.selenium.NoSuchElementException;
 import pages.base.BasePage;

@@ -1,16 +1,18 @@
-package test_scenario_1;
+package testscenario1;
 
 import base.BaseTest;
 import base.TestData;
+import business.steps.LoginSteps;
+import business.steps.ShoppingSteps;
 import io.qameta.allure.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
-import pages.saucedemo_pages.*;
+import pages.saucedemopages.*;
 
 import java.util.List;
 @Epic("Scenario 1")
-public class Scenario_1 extends BaseTest {
+public class ScenarioOneTest extends BaseTest {
 
     private static final int ZERO_PRODUCTS_COUNT = 0;
     private static final int TWO_PRODUCTS_COUNT = 2;
@@ -19,40 +21,42 @@ public class Scenario_1 extends BaseTest {
     private InventoryPage inventoryPage;
     private ShoppingCart shoppingCart;
 
+    private ShoppingSteps shoppingSteps;
+
     @Test
     @Story("login with valid credentials")
     @Description("Verifies that an existing user can log in with correct password.")
     public void verifyLogin() {
-        inventoryPage = new LoginPage(driver)
-                .login(TestData.STANDARD_USERNAME, TestData.PASSWORD);
+        LoginSteps loginSteps = new LoginSteps(driver);
+        inventoryPage = loginSteps.login(TestData.STANDARD_USERNAME, TestData.PASSWORD);
         Assert.assertTrue(inventoryPage.isHeaderDisplayed(), "Inventory page is not displayed");
     }
 
     @Test(dependsOnMethods = "verifyLogin")
     @Step("adding two Items to cart")
     public void addTwoItemsToCart() {
-        inventoryPage.addProductsToCart(TestData.BACKPACK, TestData.BIKE_LIGHT);
+        shoppingSteps = new ShoppingSteps(inventoryPage);
+        shoppingSteps.addProducts(TestData.BACKPACK, TestData.BIKE_LIGHT);
         Assert.assertEquals(inventoryPage.getCartItemCount(), TWO_PRODUCTS_COUNT, String.format("Incorrect number of items in cart, " +
                 "expected %d but got %d", TWO_PRODUCTS_COUNT, inventoryPage.getCartItemCount()));
     }
 
     @Test(dependsOnMethods = "addTwoItemsToCart")
     public void addThirdItemToCart() {
-        inventoryPage.addProductsToCart(TestData.BOLT_T_SHIRT);
+        shoppingSteps.addProducts(TestData.BOLT_T_SHIRT);
         Assert.assertEquals(inventoryPage.getCartItemCount(), THREE_PRODUCTS_COUNT, String.format("Incorrect number of items in Cart, " +
                 "expected %d but got %d ", THREE_PRODUCTS_COUNT, inventoryPage.getCartItemCount()));
     }
 
     @Test(dependsOnMethods = "addThirdItemToCart")
     public void removeProductsFromCart() {
-        inventoryPage.removeProductsFromCart(TestData.BOLT_T_SHIRT, TestData.BIKE_LIGHT, TestData.BACKPACK);
+        shoppingSteps.removeProducts(TestData.BOLT_T_SHIRT, TestData.BIKE_LIGHT, TestData.BACKPACK);
         Assert.assertEquals(inventoryPage.getCartItemCount(), ZERO_PRODUCTS_COUNT, "shopping card badge should not be displayed");
     }
 
     @Test(dependsOnMethods = "removeProductsFromCart")
     public void goToCartWithTreeProducts() {
-        shoppingCart = inventoryPage.addProductsToCart(TestData.FLEECE_JACKET, TestData.RED_T_SHIRT, TestData.ONESIE)
-                .goToCart();
+        shoppingCart = shoppingSteps.addProductsAndGoToCart(TestData.FLEECE_JACKET, TestData.RED_T_SHIRT, TestData.ONESIE);
         Assert.assertTrue(shoppingCart.isShoppingCartTitleDisplayed(), "Shopping cart title is not displayed");
     }
 

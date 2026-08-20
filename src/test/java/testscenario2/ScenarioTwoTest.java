@@ -1,54 +1,42 @@
-package test_scenario_2;
+package testscenario2;
 
 import base.BaseTest;
 import base.TestData;
+import business.steps.CheckoutSteps;
+import business.steps.LoginSteps;
+import business.steps.ShoppingSteps;
 import io.qameta.allure.Epic;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
-import pages.saucedemo_pages.*;
+import pages.saucedemopages.*;
 
 @Epic("Scenario 2")
-public class Scenario_2 extends BaseTest {
+public class ScenarioTwoTest extends BaseTest {
 
     private InventoryPage inventoryPage;
     private ShoppingCart shoppingCart;
-    private CheckoutStep1 checkoutStep1;
-    private CheckoutStep2 checkoutStep2;
-    private CheckoutComplete checkoutComplete;
+
+    private final CheckoutSteps checkoutSteps =  new CheckoutSteps();
 
     @Test
     public void verifyLogin(){
-        inventoryPage = new LoginPage(driver)
-                .login(TestData.STANDARD_USERNAME, TestData.PASSWORD);
+        LoginSteps loginSteps = new LoginSteps(driver);
+        inventoryPage = loginSteps.login(TestData.STANDARD_USERNAME, TestData.PASSWORD);
         Assert.assertTrue(inventoryPage.isHeaderDisplayed(), "Inventory page is not displayed");
     }
 
     @Test(dependsOnMethods = "verifyLogin")
     public void verifyAddToCart(){
-        shoppingCart = inventoryPage.addProductsToCart(TestData.BACKPACK,
-                        TestData.BIKE_LIGHT, TestData.FLEECE_JACKET, TestData.BOLT_T_SHIRT)
-                .goToCart();
+        ShoppingSteps shoppingSteps = new ShoppingSteps(inventoryPage);
+        shoppingCart = shoppingSteps.addProductsAndGoToCart(TestData.BACKPACK,
+                TestData.BIKE_LIGHT, TestData.FLEECE_JACKET, TestData.BOLT_T_SHIRT);
         Assert.assertEquals(shoppingCart.getShoppingCartItemCount(), 4, "Shopping cart item count is incorrect");
     }
 
     @Test(dependsOnMethods = "verifyAddToCart")
-    public void goToCheckoutStep1(){
-        checkoutStep1 = shoppingCart.removeProductsFromCart(TestData.BACKPACK)
-                .goToCheckout();
-                Assert.assertTrue(checkoutStep1.isCheckoutTitleDisplayed(), "Checkout step 1 page Title is not displayed");
-    }
-
-    @Test(dependsOnMethods = "goToCheckoutStep1")
-    public void goToCheckoutStep2(){
-        checkoutStep2 = checkoutStep1.fillTheFields(TestData.RANDOM_SYMBOLS, TestData.RANDOM_SYMBOLS, TestData.RANDOM_SYMBOLS)
-                .continueToCheckout();
-        Assert.assertTrue(checkoutStep2.isCheckoutTitleDisplayed(), "Checkout step 2 page Title is not displayed");
-    }
-
-    @Test(dependsOnMethods = "goToCheckoutStep2")
     public void verifyCheckoutComplete(){
-        checkoutComplete = checkoutStep2.clickFinish();
+        CheckoutComplete checkoutComplete = checkoutSteps.completeCheckout(shoppingCart, TestData.RANDOM_SYMBOLS, TestData.RANDOM_SYMBOLS, TestData.RANDOM_SYMBOLS);
 
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertTrue(checkoutComplete.isCheckoutCompleteTitleDisplayed(),

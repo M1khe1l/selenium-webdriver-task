@@ -8,9 +8,9 @@ This project is a Maven-based Selenium WebDriver automation task implemented in 
 - `src/main/java/pages/saucedemo_pages` — Page Object classes for the SauceDemo application.
 - `src/main/java/utilities` — Utility methods used by the tests.
 - `src/test/java/base` — Base test configuration and test data.
-- `src/test/java/test_scenario_1` — Tests for scenario 1.
-- `src/test/java/test_scenario_2` — Tests for scenario 2.
-- `src/test/java/test_scenario_3` — Tests for scenario 3.
+- `src/test/java/testscenario1` — Tests for scenario 1.
+- `src/test/java/testscenario2` — Tests for scenario 2.
+- `src/test/java/testscenario3` — Tests for scenario 3.
 
 ## Technologies
 

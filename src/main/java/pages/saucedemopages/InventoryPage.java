@@ -1,4 +1,4 @@
-package pages.saucedemo_pages;
+package pages.saucedemopages;
 
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;

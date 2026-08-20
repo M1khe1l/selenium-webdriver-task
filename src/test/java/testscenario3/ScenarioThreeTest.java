@@ -1,17 +1,18 @@
-package test_scenario_3;
+package testscenario3;
 
 import base.BaseTest;
 import base.TestData;
+import business.steps.LoginSteps;
 import io.qameta.allure.Epic;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
-import pages.saucedemo_pages.InventoryItemPage;
-import pages.saucedemo_pages.InventoryPage;
-import pages.saucedemo_pages.LoginPage;
+import pages.saucedemopages.InventoryItemPage;
+import pages.saucedemopages.InventoryPage;
+import pages.saucedemopages.LoginPage;
 
 @Epic("Scenario 3")
-public class Scenario_3 extends BaseTest{
+public class ScenarioThreeTest extends BaseTest{
 
     private static final int ZERO = 0;
     private static final int ONE = 1;
@@ -21,13 +22,14 @@ public class Scenario_3 extends BaseTest{
     private InventoryPage inventoryPage;
     private InventoryItemPage inventoryItemPage;
 
+    private LoginSteps loginSteps;
+
     @Test(priority = 1)
     public void loginWithInvalidCredentials() {
-        loginPage = new LoginPage(driver);
-        loginPage.login(TestData.RANDOM_SYMBOLS, TestData.PASSWORD);
+        loginSteps = new LoginSteps(driver);
+        loginPage = loginSteps.attemptLogin(TestData.RANDOM_SYMBOLS, TestData.PASSWORD);
 
         SoftAssert softAssert = new SoftAssert();
-
         softAssert.assertTrue(loginPage.isErrorMessageDisplayed(), "Error message is not displayed");
         softAssert.assertEquals(loginPage.getErrorMessage(), TestData.INVALID_USER_ERROR_MESSAGE,
                 "Error message is incorrect");
@@ -37,8 +39,8 @@ public class Scenario_3 extends BaseTest{
 
     @Test(priority = 2)
     public void loginWithLockedOutUser() {
-        loginPage = new LoginPage(driver);
-        loginPage.login(TestData.LOCKED_OUT_USERNAME, TestData.PASSWORD);
+        loginPage = loginSteps.attemptLogin(TestData.LOCKED_OUT_USERNAME, TestData.PASSWORD);
+
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertTrue(loginPage.isErrorMessageDisplayed(), "Error message is not displayed");
         softAssert.assertEquals(loginPage.getErrorMessage(), TestData.LOCKED_OUT_ERROR_MESSAGE,
@@ -48,7 +50,8 @@ public class Scenario_3 extends BaseTest{
 
     @Test(priority = 3)
     public void loginWithStandardUser() {
-        inventoryPage = new LoginPage(driver).login(TestData.STANDARD_USERNAME, TestData.PASSWORD);
+        inventoryPage = loginSteps.login(TestData.STANDARD_USERNAME, TestData.PASSWORD);
+
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertTrue(inventoryPage.isTitleDisplayed(), "Title is not displayed");
         softAssert.assertEquals(inventoryPage.getInventoryTitle(), TestData.INVENTORY_TITLE,

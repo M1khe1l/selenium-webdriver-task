@@ -1,6 +1,5 @@
-package pages.saucedemo_pages;
+package pages.saucedemopages;
 
-import core.driver.DriverFactory;
 import io.qameta.allure.Step;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
