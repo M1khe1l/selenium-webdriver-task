@@ -11,10 +11,6 @@ public class CheckoutSteps {
 
     private static final Logger logger = LoggerFactory.getLogger(CheckoutSteps.class);
 
-    /**
-     * Completes the entire checkout flow starting from the Shopping Cart page:
-     * cart -> checkout info -> checkout overview -> order confirmation.
-     */
     public CheckoutComplete completeCheckout(ShoppingCart cart,
                                              String firstName,
                                              String lastName,

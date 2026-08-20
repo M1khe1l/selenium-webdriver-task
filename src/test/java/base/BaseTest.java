@@ -51,18 +51,12 @@ public class BaseTest {
         DriverFactory.quitDriver();
     }
 
-
     @Attachment(value = "Screenshot on failure", type = "image/png")
     public byte[] takeScreenshot() {
         log.info("Taking  screenshot");
         return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
     }
 
-
-    /**
-     * Persists the screenshot to disk (under ./screenshots) so it survives beyond the
-     * Allure report and can be picked up as a CI build artifact. Logs the saved path.
-     */
     private void saveScreenshotToDisk(byte[] screenshot, String testName) {
         try {
             Path directory = Paths.get(SCREENSHOT_DIRECTORY);

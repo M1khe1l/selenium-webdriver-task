@@ -70,7 +70,6 @@ public class DriverFactory {
         return driver;
     }
 
-
     private static ChromeOptions chromeOptions() {
         ChromeOptions options = new ChromeOptions();
         Map<String, Object> prefs = new HashMap<>();
