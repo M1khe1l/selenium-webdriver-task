@@ -1,5 +1,6 @@
 package core.driver;
 
+import core.config.ConfigReader;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -10,7 +11,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +24,11 @@ public class DriverFactory {
 
     public static WebDriver getDriver() {
         if (DRIVER_THREAD_LOCAL.get() == null) {
-            String browserProperty = System.getProperty("browser", "chrome");
+            String browserProperty = System.getProperty("browser");
+            if (browserProperty == null || browserProperty.isBlank()) {
+                browserProperty = ConfigReader.get("browser");
+                logger.info("No -Dbrowser passed, using browser from config {}", browserProperty);
+            }
             BrowserType browserType = BrowserType.fromString(browserProperty);
             logger.info("Creating new WebDriver instance for browser: {}", browserType);
             DRIVER_THREAD_LOCAL.set(createDriver(browserType));
@@ -60,7 +64,9 @@ public class DriverFactory {
                 driver = new EdgeDriver(edgeOptions());
             }
             default -> throw new IllegalArgumentException("Unsupported browser: " + browserType);
+
         }
+
         return driver;
     }
 
