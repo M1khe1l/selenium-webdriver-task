@@ -3,7 +3,7 @@
 
 <suite name="saucedemo_regression_test" verbose="2">
 
-    <test name="regression_test" parallel="classes" thread-count="3">
+    <test name="regression_test" parallel="classes" thread-count="10">
         <groups>
             <run>
                 <include name="regression"/>

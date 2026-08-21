@@ -30,6 +30,7 @@ public class BaseTest {
 
     @BeforeClass(alwaysRun = true)
     public void setup() {
+        log.info("setup() running on thread: {}", Thread.currentThread().getName());
         driver = DriverFactory.getDriver();
         String baseURL = ConfigReader.getBaseUrl();
         log.info("Navigating  to URL: {}", baseURL);
@@ -48,7 +49,8 @@ public class BaseTest {
 
     @AfterClass(alwaysRun = true)
     public void tearDown() {
-        DriverFactory.quitDriver();
+        log.info("tearDown() running on thread: {}", Thread.currentThread().getName());
+        DriverFactory.quitDriver(driver);
     }
 
     @Attachment(value = "Screenshot on failure", type = "image/png")

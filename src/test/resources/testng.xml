@@ -3,7 +3,7 @@
 
 <suite name="saucedemo_test" verbose="2">
 
-    <test name="all_test" parallel="classes" thread-count="3">
+    <test name="all_test" parallel="classes" thread-count="10">
         <classes>
             <class name="testscenario1.ScenarioOneTest"/>
             <class name="testscenario2.ScenarioTwoTest"/>

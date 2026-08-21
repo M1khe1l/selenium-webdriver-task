@@ -36,12 +36,18 @@ public class DriverFactory {
         return DRIVER_THREAD_LOCAL.get();
     }
 
-    public static void quitDriver() {
-        WebDriver driver = DRIVER_THREAD_LOCAL.get();
+    public static void quitDriver(WebDriver driver) {
         if (driver != null) {
             logger.info("Quitting WebDriver instance for thread: {}", Thread.currentThread().getName());
-            driver.quit();
-            DRIVER_THREAD_LOCAL.remove();
+            try{
+                driver.quit();
+            } catch (Exception e){
+                logger.error("Error quitting WebDriver instance", e);
+            } finally {
+                if (DRIVER_THREAD_LOCAL.get() == driver) {
+                    DRIVER_THREAD_LOCAL.remove();
+                }
+            }
         }
     }
 
