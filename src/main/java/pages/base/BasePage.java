@@ -65,9 +65,12 @@ public abstract class BasePage{
         return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
-
-    public String getCurrentUrl() {
+    protected String getCurrentUrl() {
         return driver.getCurrentUrl();
     }
 
+    protected By buildLocator(String idPrefix, String productName) {
+        String formattedName = productName.toLowerCase().replaceAll(" ", "-");
+        return By.id(idPrefix + formattedName);
+    }
 }

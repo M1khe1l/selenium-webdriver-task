@@ -2,9 +2,8 @@ package base;
 
 import core.config.ConfigReader;
 import core.driver.DriverFactory;
+import core.reporting.ScreenshotUtils;
 import io.qameta.allure.Attachment;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,11 +12,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class BaseTest {
@@ -41,8 +35,7 @@ public class BaseTest {
         if (ITestResult.FAILURE == result.getStatus()) {
             log.info("Test Failed: {}", result.getName());
             byte[] screenshot = takeScreenshot();
-            saveScreenshotToDisk(screenshot, result.getName());
-
+            ScreenshotUtils.saveToDisk(screenshot, result.getName());
         }
     }
 
@@ -55,21 +48,6 @@ public class BaseTest {
     @Attachment(value = "Screenshot on failure", type = "image/png")
     public byte[] takeScreenshot() {
         log.info("Taking  screenshot");
-        return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
-    }
-
-    private void saveScreenshotToDisk(byte[] screenshot, String testName) {
-        try {
-            Path directory = Paths.get(SCREENSHOT_DIRECTORY);
-            Files.createDirectories(directory);
-
-            String fileName = testName + "_" + LocalDateTime.now().format(TIMESTAMP_FORMAT) + ".png";
-            Path filePath = directory.resolve(fileName);
-            Files.write(filePath, screenshot);
-
-            log.info("Screenshot saved: {}", filePath.toAbsolutePath());
-        } catch (IOException e) {
-            log.error("Failed to save screenshot to disk for test '{}'", testName, e);
-        }
+        return ScreenshotUtils.capture(driver);
     }
 }

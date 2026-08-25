@@ -4,23 +4,41 @@ import core.config.ConfigReader;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class DriverFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(DriverFactory.class);
     private static final ThreadLocal<WebDriver> DRIVER_THREAD_LOCAL = new ThreadLocal<>();
+
+    private static final Map<BrowserType, Supplier<RemoteWebDriver>> DRIVER_CREATORS = new EnumMap<>(BrowserType.class);
+
+    static {
+        DRIVER_CREATORS.put(BrowserType.CHROME, () -> {
+            logger.info("Creating Chrome driver");
+            WebDriverManager.chromedriver().setup();
+            return new ChromeDriver(BrowserOptionsFactory.chromeOptions());
+        });
+        DRIVER_CREATORS.put(BrowserType.FIREFOX, () -> {
+            logger.info("Creating Firefox driver");
+            WebDriverManager.firefoxdriver().setup();
+            return new FirefoxDriver(BrowserOptionsFactory.firefoxOptions());
+        });
+        DRIVER_CREATORS.put(BrowserType.EDGE, () -> {
+            logger.info("Creating Edge driver");
+            WebDriverManager.edgedriver().setup();
+            return new EdgeDriver(BrowserOptionsFactory.edgeOptions());
+        });
+    }
 
     private DriverFactory() {}
 
@@ -57,64 +75,15 @@ public class DriverFactory {
     }
 
     private static WebDriver createDriver(BrowserType browserType) {
-        RemoteWebDriver driver;
-        switch (browserType) {
-            case FIREFOX -> {
-                logger.info("Creating Firefox driver");
-                WebDriverManager.firefoxdriver().setup();
-                driver = new FirefoxDriver(firefoxOptions());
-            }
-            case CHROME -> {
-                logger.info("Creating Chrome driver");
-                WebDriverManager.chromedriver().setup();
-                driver = new ChromeDriver(chromeOptions());
-            }
-            case EDGE -> {
-                logger.info("Creating Edge driver");
-                WebDriverManager.edgedriver().setup();
-                driver = new EdgeDriver(edgeOptions());
-            }
-            default -> throw new IllegalArgumentException("Unsupported browser: " + browserType);
-
-        }
-
-        return driver;
+       Supplier<RemoteWebDriver> creator = DRIVER_CREATORS.get(browserType);
+       if (creator == null) {
+           throw new IllegalArgumentException("Unsupported driver: " + browserType);
+       }
+       return creator.get();
     }
 
-
-    /**
-     * Wraps the raw WebDriver instance with Selenium's EventFiringDecorator - the Decorator
-     * pattern implementation. The returned object still implements WebDriver, so every existing
-     * page object keeps working unchanged, but every method call is now routed through
-     * LoggingWebDriverListener first.
-     */
     private static WebDriver decorateWithLogging(WebDriver rawDriver) {
         logger.debug("Decorating WebDriver instance with logging listener");
         return new EventFiringDecorator<>(new LoggingWebDriverListener()).decorate(rawDriver);
-    }
-
-    private static ChromeOptions chromeOptions() {
-        ChromeOptions options = new ChromeOptions();
-        Map<String, Object> prefs = new HashMap<>();
-        prefs.put("credentials_enable_service", false);
-        prefs.put("profile.password_manager_enabled", false);
-        prefs.put("profile.password_manager_leak_detection", false);
-        options.setExperimentalOption("prefs", prefs);
-        return options;
-    }
-
-    private static FirefoxOptions firefoxOptions() {
-        FirefoxOptions options = new FirefoxOptions();
-        options.addPreference("signon.rememberSignons", false);
-        return options;
-    }
-
-    private static EdgeOptions edgeOptions() {
-        EdgeOptions options = new EdgeOptions();
-        Map<String, Object> prefs = new HashMap<>();
-        prefs.put("credentials_enable_service", false);
-        prefs.put("profile.password_manager_enabled", false);
-        options.setExperimentalOption("prefs", prefs);
-        return options;
     }
 }

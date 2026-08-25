@@ -51,8 +51,7 @@ public class ShoppingCart extends BasePage {
     }
 
     public By stringToByRemoval(String productName) {
-        String formattedName = productName.toLowerCase().replaceAll(" ", "-");
-        return By.id("remove-" + formattedName);
+        return buildLocator("remove-", productName);
     }
 
     public InventoryPage continueShopping() {
@@ -64,5 +63,4 @@ public class ShoppingCart extends BasePage {
         click(checkoutBtn);
         return new CheckoutStep1(driver);
     }
-
 }

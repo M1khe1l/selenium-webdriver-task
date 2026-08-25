@@ -65,13 +65,11 @@ public class InventoryPage extends BasePage {
     }
 
     public By stringToByAddition(String productName) {
-        String formattedName = productName.toLowerCase().replaceAll(" ", "-");
-        return By.id("add-to-cart-" + formattedName);
+        return buildLocator("add-to-cart-", productName);
     }
 
     public By stringToByRemoval(String productName) {
-        String formattedName = productName.toLowerCase().replaceAll(" ", "-");
-        return By.id("remove-" + formattedName);
+         return buildLocator("remove-", productName);
     }
 
     public InventoryPage sortProductsByValue(String sortValue) {
@@ -127,38 +125,37 @@ public class InventoryPage extends BasePage {
     }
 
     public int getIndexOfHighesPrice(){
-        List<Double> priceList = getDoubleListOfPrices(inventoryItemsList, itemNestedPrice);
-        int index = 0;
-        for (int i = 0 ; i < priceList.size() ; i++){
-            if (priceList.get(i) > priceList.get(index)){
-                index = i;
-            }
-        }
-        return index;
+        return getExtremePriceIndex(true);
     }
 
     public int getIndexOfLowesPrice(){
-        List<Double> priceList = getDoubleListOfPrices(inventoryItemsList, itemNestedPrice);
-        int index = 0;
-        for (int i = 0 ; i < priceList.size() ; i++){
-            if (priceList.get(i) < priceList.get(index)){
-                index = i;
-            }
-        }
-        return index;
+        return getExtremePriceIndex(false);
     }
 
-    private List<Double> getDoubleListOfPrices(By listLocator, By priceLocator) {
-        List<WebElement> itemsList = getListOfElements(listLocator);
+    private List<Double> getDoubleListOfAllPrices() {
+        List<WebElement> itemsList = getListOfElements(inventoryItemsList);
         List<Double> prices = new ArrayList<>();
         for (WebElement item : itemsList) {
-            WebElement price = item.findElement(priceLocator);
+            WebElement price = item.findElement(itemNestedPrice);
             prices.add(parseDoubleFromString(getText(price)));
         }
         return prices;
     }
 
-
+    private int getExtremePriceIndex(boolean findHighest) {
+        List<Double> priceList = getDoubleListOfAllPrices();
+        if (priceList.isEmpty()) {
+            return -1;
+        }
+        int index = 0;
+        for (int i = 0 ; i < priceList.size() ; i++){
+            boolean isExtreme = findHighest ? priceList.get(i) > priceList.get(index) : priceList.get(i) < priceList.get(index);
+            if (isExtreme){
+                index = i;
+            }
+        }
+        return index;
+    }
 
     private String getNestedNameFromElement(WebElement element) {
         return element.findElement(itemNestedName).getText();
