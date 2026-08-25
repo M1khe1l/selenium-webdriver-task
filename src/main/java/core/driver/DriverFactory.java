@@ -9,6 +9,7 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +41,7 @@ public class DriverFactory {
         if (driver != null) {
             logger.info("Quitting WebDriver instance for thread: {}", Thread.currentThread().getName());
             try{
+                driver.close();
                 driver.quit();
             } catch (Exception e){
                 logger.error("Error quitting WebDriver instance", e);
@@ -52,7 +54,7 @@ public class DriverFactory {
     }
 
     private static WebDriver createDriver(BrowserType browserType) {
-        WebDriver driver;
+        RemoteWebDriver driver;
         switch (browserType) {
             case FIREFOX -> {
                 logger.info("Creating Firefox driver");
