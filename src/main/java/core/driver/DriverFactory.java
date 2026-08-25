@@ -10,6 +10,7 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +33,9 @@ public class DriverFactory {
             }
             BrowserType browserType = BrowserType.fromString(browserProperty);
             logger.info("Creating new WebDriver instance for browser: {}", browserType);
-            DRIVER_THREAD_LOCAL.set(createDriver(browserType));
+            WebDriver rawDriver = createDriver(browserType);
+            WebDriver decoratedDriver = decorateWithLogging(rawDriver);
+            DRIVER_THREAD_LOCAL.set(decoratedDriver);
         }
         return DRIVER_THREAD_LOCAL.get();
     }
@@ -76,6 +79,18 @@ public class DriverFactory {
         }
 
         return driver;
+    }
+
+
+    /**
+     * Wraps the raw WebDriver instance with Selenium's EventFiringDecorator - the Decorator
+     * pattern implementation. The returned object still implements WebDriver, so every existing
+     * page object keeps working unchanged, but every method call is now routed through
+     * LoggingWebDriverListener first.
+     */
+    private static WebDriver decorateWithLogging(WebDriver rawDriver) {
+        logger.debug("Decorating WebDriver instance with logging listener");
+        return new EventFiringDecorator<>(new LoggingWebDriverListener()).decorate(rawDriver);
     }
 
     private static ChromeOptions chromeOptions() {

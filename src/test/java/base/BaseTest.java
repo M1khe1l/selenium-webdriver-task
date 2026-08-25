@@ -33,7 +33,6 @@ public class BaseTest {
         log.info("setup() running on thread: {}", Thread.currentThread().getName());
         driver = DriverFactory.getDriver();
         String baseURL = ConfigReader.getBaseUrl();
-        log.info("Navigating  to URL: {}", baseURL);
         driver.get(baseURL);
     }
 
