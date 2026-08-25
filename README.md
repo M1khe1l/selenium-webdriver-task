@@ -1,27 +1,88 @@
 # Selenium WebDriver Task
 
 This project is a Maven-based Selenium WebDriver automation task implemented in Java.
+Selenium WebDriver + TestNG automation framework for [saucedemo.com](https://www.saucedemo.com/), built as a layered TAF: **Core** (driver/config/logging), **Business** (steps + page objects), **Test** (TestNG scenarios).
+
+## Tech Stack
+
+- Java 17, Maven
+- Selenium WebDriver 4.46.0, WebDriverManager 5.9.2
+- TestNG 7.12.0
+- Allure TestNG 2.35.4
+- Log4j2 2.26.1 (via SLF4J2)
 
 ## Project Structure
 
-- `src/main/java/pages/base` — Base page functionality.
-- `src/main/java/pages/saucedemo_pages` — Page Object classes for the SauceDemo application.
-- `src/main/java/utilities` — Utility methods used by the tests.
-- `src/test/java/base` — Base test configuration and test data.
-- `src/test/java/testscenario1` — Tests for scenario 1.
-- `src/test/java/testscenario2` — Tests for scenario 2.
-- `src/test/java/testscenario3` — Tests for scenario 3.
+```
+src
+├── main/java
+│   ├── business/
+│   │   ├── model/Product.java
+│   │   └── steps/           # CheckoutSteps, LoginSteps, ShoppingSteps
+│   ├── core/
+│   │   ├── config/ConfigReader.java
+│   │   ├── driver/          # BrowserOptionsFactory, BrowserType, DriverFactory, LoggingWebDriverListener
+│   │   └── reporting/ScreenshotUtils.java
+│   ├── pages/
+│   │   ├── base/BasePage.java
+│   │   └── saucedemopages/  # LoginPage, InventoryPage, InventoryItemPage, ShoppingCart, CheckoutStep1/2, CheckoutComplete
+│   └── utilities/UtilityMethods.java
+├── main/resources/config/
+│   ├── qa.properties
+│   └── staging.properties
+├── test/java
+│   ├── base/                # BaseTest, TestData
+│   ├── testscenario1/ScenarioOneTest.java
+│   ├── testscenario2/ScenarioTwoTest.java
+│   └── testscenario3/ScenarioThreeTest.java
+└── test/resources/
+    ├── log4j2.xml
+    ├── smoke.xml
+    ├── regression.xml
+    └── testng.xml
+```
 
-## Technologies
+## Configuration
 
-- Java
-- Maven
-- Selenium WebDriver
-- TestNG
-- Page Object Model (POM)
+Environment properties: `src/main/resources/config/{qa,staging}.properties` (`base.url`, `browser`, `environment`).
+
+Select environment / browser at runtime (defaults: `env=qa`, browser from properties file):
+
+```bash
+mvn test -Denv=staging -Dbrowser=firefox
+```
+
+Supported browsers: `chrome`, `firefox`, `edge`.
+
+## Running Tests
+
+```bash
+mvn clean test                                   # default suite (smoke.xml, set in pom.xml)
+mvn clean test -DsuiteXmlFile=regression.xml      # run regression suite
+mvn clean test -Dtest=testscenario1.ScenarioOneTest   # single class
+```
+
+## Test Suites
+
+| Suite | Scope | Mode |
+|---|---|---|
+| `smoke.xml` | `smoke` group tests | Sequential |
+| `regression.xml` | `regression` group tests | Parallel by class (10 threads) |
+| `testng.xml` | All test classes | Parallel by class (10 threads) |
+
+## Reporting & Logging
+
+- Allure results: `target/allure-results` → `mvn allure:report` / `mvn allure:serve`
+- Failed tests auto-attach a screenshot (saved to `screenshots/`)
+- Logs: console + daily rolling file at `logs/test-execution.log` (30-day retention), configured in `log4j2.xml`
 
 ## Test Scenarios
 
-The project contains automated tests covering three specified scenarios of the SauceDemo application.
+- **Scenario 1** – Login, add/remove cart items, verify cart persists across navigation
+- **Scenario 2** – Login, add items, complete full checkout flow
+- **Scenario 3** – Invalid/locked-out/valid login, sort products, view item details, add to cart from item page
 
-Tests can be executed using Maven or directly from IntelliJ IDEA.x
+## Notes
+
+- Test methods within each scenario class use `dependsOnMethods`, so classes must run as a whole, not as isolated methods.
+- `DriverFactory` uses `ThreadLocal<WebDriver>` for safe parallel execution.
