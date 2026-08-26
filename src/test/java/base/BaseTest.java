@@ -12,13 +12,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 
-import java.time.format.DateTimeFormatter;
-
 public class BaseTest {
 
     protected static final Logger log = LoggerFactory.getLogger(BaseTest.class);
-    private static final String SCREENSHOT_DIRECTORY = "screenshots";
-    private static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
 
     protected WebDriver driver;
 
@@ -30,7 +26,7 @@ public class BaseTest {
         driver.get(baseURL);
     }
 
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void captureFailure(ITestResult result) {
         if (ITestResult.FAILURE == result.getStatus()) {
             log.info("Test Failed: {}", result.getName());
