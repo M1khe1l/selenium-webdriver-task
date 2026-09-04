@@ -15,7 +15,7 @@
         <allure.version>2.35.4</allure.version>
         <!--aspectj properties -->
         <aspectj.version>1.9.21</aspectj.version>
-        <suiteXmlFile>smoke.xml</suiteXmlFile>
+        <suiteXmlFile>cucumber.xml</suiteXmlFile>
     </properties>
 
     <dependencies>
@@ -84,6 +84,22 @@
             <version>5.6.8</version>
             <scope>compile</scope>
         </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/io.cucumber/cucumber-java -->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>7.34.7</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Source: https://mvnrepository.com/artifact/io.cucumber/cucumber-testng -->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-testng</artifactId>
+            <version>7.34.7</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
