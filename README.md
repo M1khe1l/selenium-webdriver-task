@@ -32,11 +32,16 @@ src
 │   └── staging.properties
 ├── test/java
 │   ├── base/                # BaseTest, TestData
+│   ├── cucumberglue/        # Hooks, LoginStepDefinitions
+│   ├── cucumberrunner/TestRunner.java
 │   ├── testscenario1/ScenarioOneTest.java
 │   ├── testscenario2/ScenarioTwoTest.java
 │   └── testscenario3/ScenarioThreeTest.java
 └── test/resources/
+    ├── features/login.feature
+    ├── cucumber.xml
     ├── log4j2.xml
+    ├── reportportal.properties
     ├── smoke.xml
     ├── regression.xml
     └── testng.xml
